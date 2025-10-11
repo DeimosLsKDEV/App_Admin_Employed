@@ -1,0 +1,23 @@
+@model List<AppAdminEmployed.Models.EmpleadoModel>
+
+<h2>Lista de empleados</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Identificación</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var empleado in Model)
+        {
+            <tr>
+                <td>@empleado.UUID</td>
+                <td>@empleado.IDENTIFICACION</td>
+                <td>@empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE @empleado.SEGUNDO_NOMBRE</td>
+            </tr>
+        }
+    </tbody>
+</table>

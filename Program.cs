@@ -1,6 +1,8 @@
-using MiAppMvc.Data;
+using AppAdminEmployed.Data;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using AppAdminEmployed.Repository;
+using AppAdminEmployed.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ string ConnectionSQLDBString = $"Server={Environment.GetEnvironmentVariable("DB_
 // Add DB Conections in this case is SQL SERVER
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(ConnectionSQLDBString));
+
+builder.Services.AddScoped<EmpleadosService>();
+builder.Services.AddScoped<EmpleadoRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

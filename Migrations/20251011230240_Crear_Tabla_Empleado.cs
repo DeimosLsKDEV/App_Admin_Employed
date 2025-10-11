@@ -1,20 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace AppAdminEmployed.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class Crear_Tabla_Empleado : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DbEmpleado",
+                name: "Empleados",
                 columns: table => new
                 {
-                    UUID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IDENTIFICACION = table.Column<int>(type: "int", nullable: false),
                     PRIMER_NOMBRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SEGUNDO_NOMBRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -23,7 +24,7 @@ namespace AppAdminEmployed.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbEmpleado", x => x.UUID);
+                    table.PrimaryKey("PK_Empleados", x => x.UUID);
                 });
         }
 
@@ -31,7 +32,7 @@ namespace AppAdminEmployed.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DbEmpleado");
+                name: "Empleados");
         }
     }
 }

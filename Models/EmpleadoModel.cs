@@ -1,14 +1,19 @@
 using System.ComponentModel.DataAnnotations;
-namespace AppAdminEmployed.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class EmpleadoModel
+namespace AppAdminEmployed.Models
 {
-    [Key]
-    public required string UUID { get; set; }
-    public required int IDENTIFICACION { get; set; }
+    [Table("Empleados")]
+    public class EmpleadoModel
+    {
+        [Key]
+        public Guid UUID { get; set; } = Guid.NewGuid();
 
-    public string? PRIMER_NOMBRE { get; set; }
-    public string? SEGUNDO_NOMBRE { get; set; }
-    public string? PRIMER_APELLIDO { get; set; }
-    public string? SEGUNDO_APELLIDO { get; set; }
+        public required int IDENTIFICACION { get; set; }
+
+        public string? PRIMER_NOMBRE { get; set; }
+        public string? SEGUNDO_NOMBRE { get; set; }
+        public string? PRIMER_APELLIDO { get; set; }
+        public string? SEGUNDO_APELLIDO { get; set; }
+    }
 }
