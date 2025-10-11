@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 namespace AppAdminEmployed.Models;
 
 public class EmpleadoModel
 {
+    [Key]
     public required string UUID { get; set; }
     public required int IDENTIFICACION { get; set; }
 
