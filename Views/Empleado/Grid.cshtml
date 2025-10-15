@@ -1,23 +1,53 @@
 @model List<AppAdminEmployed.Models.EmpleadoModel>
 
 <h2>Lista de empleados</h2>
+<div class='row'>
+    <div class='col-12'>
+    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"> Agregar</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>ID</th>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var empleado in Model)
+                {
+                    <tr>
+                        <td><!--<button type="button" class="btn btn-warning"> Editar </button>--></td>
+                        <td>@empleado.UUID</td>
+                        <td>@empleado.IDENTIFICACION</td>
+                        <td>@empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE
+                            @empleado.SEGUNDO_NOMBRE
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Identificación</th>
-            <th>Nombre</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var empleado in Model)
-        {
-            <tr>
-                <td>@empleado.UUID</td>
-                <td>@empleado.IDENTIFICACION</td>
-                <td>@empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE @empleado.SEGUNDO_NOMBRE</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="contenedor-add-empleado">
+</div>
+
+@section Scripts {
+    <script>
+        $("#AddEmpleado").on("click", function () {
+            $.ajax({
+                url: "@Url.Action("Add", "Empleado")",
+                cache: false,
+                method: "GET",
+                dataType: "html",
+                success: function (html) {
+                    $("#contenedor-add-empleado").empty().html(html);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error en la petición AJAX:", error);
+                }
+            });
+        });
+    </script>
+}

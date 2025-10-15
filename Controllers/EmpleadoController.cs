@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AppAdminEmployed.Models;
 using AppAdminEmployed.Service;
+using System.Threading.Tasks;
 
 namespace AppAdminEmployed.Controllers;
 
@@ -23,6 +24,27 @@ public class EmpleadoController : Controller
     {
         List<EmpleadoModel> Empleado = await _EmpleadoService.ObtenerTodosLosEmpleados();
         return View(Empleado);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Add()
+    {
+        EmpleadoModel? empleadoModel = null;
+        return PartialView(empleadoModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Add(EmpleadoModel empleado)
+    {
+        if (ModelState.IsValid)
+        {
+
+            await _EmpleadoService.AnnadirEmpleado(empleado);
+
+            return RedirectToAction("Grid");
+        }
+
+        return View(empleado);
     }
 
     public IActionResult Privacy()

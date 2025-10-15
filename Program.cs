@@ -16,7 +16,9 @@ string ConnectionSQLDBString = $"Server={Environment.GetEnvironmentVariable("DB_
 
 // Add DB Conections in this case is SQL SERVER
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(ConnectionSQLDBString));
+    options.UseSqlServer(ConnectionSQLDBString,
+        sqlOptions => sqlOptions.CommandTimeout(180))
+);
 
 builder.Services.AddScoped<EmpleadosService>();
 builder.Services.AddScoped<EmpleadoRepository>();

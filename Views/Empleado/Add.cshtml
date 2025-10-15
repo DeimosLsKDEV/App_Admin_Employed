@@ -1,0 +1,36 @@
+@model AppAdminEmployed.Models.EmpleadoModel
+
+@using (Html.BeginForm("Add", "Empleado", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.IDENTIFICACION)
+        @Html.TextBoxFor(m => m.IDENTIFICACION, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.IDENTIFICACION, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.PRIMER_NOMBRE)
+        @Html.TextBoxFor(m => m.PRIMER_NOMBRE, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.PRIMER_NOMBRE, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SEGUNDO_NOMBRE)
+        @Html.TextBoxFor(m => m.SEGUNDO_NOMBRE, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.SEGUNDO_NOMBRE, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.PRIMER_APELLIDO)
+        @Html.TextBoxFor(m => m.PRIMER_APELLIDO, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.PRIMER_APELLIDO, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SEGUNDO_APELLIDO)
+        @Html.TextBoxFor(m => m.SEGUNDO_APELLIDO, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.SEGUNDO_APELLIDO, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+}
