@@ -1,4 +1,6 @@
 using AppAdminEmployed.Data;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using AppAdminEmployed.Repository;
@@ -23,8 +25,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<EmpleadosService>();
 builder.Services.AddScoped<EmpleadoRepository>();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<EmpleadoValidator>();
 
 var app = builder.Build();
 
@@ -52,7 +57,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Empleado}/{action=Grid}/{id?}")
     .WithStaticAssets();
 
 

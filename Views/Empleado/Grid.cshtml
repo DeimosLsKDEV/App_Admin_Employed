@@ -30,24 +30,25 @@
     </div>
 </div>
 
-<div id="contenedor-add-empleado">
+<div class="modal fade" id="modalAddEmpleado" tabindex="-1" aria-labelledby="modalAddEmpleadoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddEmpleadoLabel">Agregar Empleado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="contenedor-add-empleado">
+        
+      </div>
+    </div>
+  </div>
 </div>
 
 @section Scripts {
     <script>
         $("#AddEmpleado").on("click", function () {
-            $.ajax({
-                url: "@Url.Action("Add", "Empleado")",
-                cache: false,
-                method: "GET",
-                dataType: "html",
-                success: function (html) {
-                    $("#contenedor-add-empleado").empty().html(html);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error en la petición AJAX:", error);
-                }
-            });
+            RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add","Empleado")')
+            $('#modalAddEmpleado').modal('show');
         });
     </script>
 }

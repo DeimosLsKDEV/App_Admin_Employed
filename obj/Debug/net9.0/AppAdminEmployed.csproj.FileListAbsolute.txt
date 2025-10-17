@@ -157,7 +157,6 @@ z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\scopedcss\bundl
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\scopedcss\projectbundle\AppAdminEmployed.bundle.scp.css
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\fu1wukltp7-b9sayid5wm.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\bryztoy1n2-61n19gt1b8.gz
-z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\bbkyr4ksuh-xtxxf3hu2r.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\v7485vnth9-bqjiyaj88i.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\wrtcmtow9v-c2jlpeoesf.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\vf1d26vjyp-erw9l3u2r3.gz
@@ -217,8 +216,6 @@ z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\b0oa
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\is4kyj4ddv-muycvpuwrr.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\r9sm71rdqz-87fc7y1x7t.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\4m4ljxke90-mlv21k5csn.gz
-z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\p02jtjlcbr-fqyn57otee.gz
-z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\a9lqxp1n6z-fqyn57otee.gz
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\staticwebassets.build.json
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\staticwebassets.build.json.cache
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\staticwebassets.development.json
@@ -229,3 +226,10 @@ z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\refint\AppAdmin
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\AppAdminEmployed.pdb
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\AppAdminEmployed.genruntimeconfig.cache
 z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\ref\AppAdminEmployed.dll
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\p02jtjlcbr-qc90z29wx6.gz
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\a9lqxp1n6z-qc90z29wx6.gz
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\bin\Debug\net9.0\FluentValidation.dll
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\AppAdminEmployed.MvcApplicationPartsAssemblyInfo.cs
+Z:\Proyectos\Univesidad\DOTNET\AppAdminEmployed\obj\Debug\net9.0\compressed\bbkyr4ksuh-5yltf8fex8.gz
