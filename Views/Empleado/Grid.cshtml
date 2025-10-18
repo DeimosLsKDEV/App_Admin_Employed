@@ -3,11 +3,11 @@
 <h2>Lista de empleados</h2>
 <div class='row'>
     <div class='col-12'>
-    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"> Agregar</button>
+    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"><b><i class="fa fa-add"></i> Agregar</b></button>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Acciones</th>
+                    <th> <i class="fa fa-location-crosshairs"></i> Acciones</th>
                     <th>ID</th>
                     <th>Identificación</th>
                     <th>Nombre</th>
@@ -17,7 +17,11 @@
                 @foreach (var empleado in Model)
                 {
                     <tr>
-                        <td><!--<button type="button" class="btn btn-warning"> Editar </button>--></td>
+                        <td>
+                            <button 
+                                type="button" 
+                                class="btn btn-warning UpdateEmpleado" data-id="@empleado.IDENTIFICACION"><b><i class="fa fa-pen-to-square"></i> Editar</b> </button>
+                        </td>
                         <td>@empleado.UUID</td>
                         <td>@empleado.IDENTIFICACION</td>
                         <td>@empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE
@@ -34,7 +38,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalAddEmpleadoLabel">Agregar Empleado</h5>
+        <h5 class="modal-title modalTitleEmpleado" id="modalAddEmpleadoLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" id="contenedor-add-empleado">
@@ -47,7 +51,15 @@
 @section Scripts {
     <script>
         $("#AddEmpleado").on("click", function () {
+            $(".modalTitleEmpleado").html("Agregar Empleado.")
             RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add","Empleado")')
+            $('#modalAddEmpleado').modal('show');
+        });
+
+        $(".UpdateEmpleado").on("click", function () {
+            var empleadoId = $(this).data("id");
+            $(".modalTitleEmpleado").html("Actualizar Empleado.")
+            RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Update","Empleado")?IDENTIFICACION='+empleadoId)
             $('#modalAddEmpleado').modal('show');
         });
     </script>

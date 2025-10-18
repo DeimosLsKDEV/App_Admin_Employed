@@ -29,8 +29,46 @@ public class EmpleadoController : Controller
     [HttpGet]
     public async Task<IActionResult> Add()
     {
+        ViewBag.MethodView = "Add";
+        ViewBag.ControllerView = "Empleado";
+
         EmpleadoModel? empleadoModel = null;
         return PartialView(empleadoModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Update(
+        int IDENTIFICACION
+    )
+    {
+        EmpleadoModel? UpdatedEmpleado = null;
+        ViewBag.MethodView = "Update";
+        ViewBag.ControllerView = "Empleado";
+
+        try
+        {
+            UpdatedEmpleado = await _EmpleadoService.ObtenerEmpleadosPorIdentificacion(IDENTIFICACION);
+
+            if (UpdatedEmpleado == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Empleado no encontrado",
+                    errorCode = "NOT_FOUND"                
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            return Json(new
+            {
+                success = false,
+                errorCode = "EXCEPTION",
+                mensaje = "Hubo un eror inesperado: " + ex.Message
+            });
+        }
+        return PartialView("Add", UpdatedEmpleado);
     }
 
     [HttpPost]

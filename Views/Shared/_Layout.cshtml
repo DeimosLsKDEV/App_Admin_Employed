@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AppAdminEmployed.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" /> 
 </head>
 <body>
     <header>
@@ -49,6 +50,15 @@
     <!-- Loader -->
     <div id="global-loader">
       <div class="spinner"></div>
+    </div>
+    <!-- Notification -->
+    <div id="notification-panel" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 250px;
+        z-index: 9999;
+    ">
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

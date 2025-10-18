@@ -18,7 +18,7 @@ namespace AppAdminEmployed.Service
             return todos_empleados?.ToList() ?? new List<EmpleadoModel>();
         }
 
-        public async Task<List<EmpleadoModel>> ObtenerEmpleadosPorIdentificacion(int IDENTIFICACION)
+        public async Task<EmpleadoModel> ObtenerEmpleadosPorIdentificacion(int IDENTIFICACION)
         {
             Predicate<EmpleadoModel> predicate = new Predicate<EmpleadoModel>(
                 empleado => empleado.IDENTIFICACION == IDENTIFICACION
@@ -28,7 +28,7 @@ namespace AppAdminEmployed.Service
                 empleado => empleado.IDENTIFICACION == IDENTIFICACION
             );
 
-            return empleados?.ToList() ?? new List<EmpleadoModel>();
+            return empleados.FirstOrDefault();
         }
         
         public async Task<EmpleadoModel> AnnadirEmpleado(EmpleadoModel EMPLEADO_NUEVO)

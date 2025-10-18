@@ -25,7 +25,7 @@ function RedirectContentUrl(container, url){
 }
 
 function ValidatorsInput(input) {
-    let value = input.value.trim();
+    let value = input.value;
     let errors = [];
 
     if (input.dataset.pattern) {
@@ -81,3 +81,29 @@ function ValidatorsInput(input) {
         return { valid: true };
     }
 }
+
+function showNotification(message, timeout = 5000) {
+        const panel = document.getElementById("notification-panel");
+
+        const notif = document.createElement("div");
+        notif.className = "notification";
+        notif.innerText = message;
+
+        // Estilos básicos
+        notif.style.background = "#2196F3";
+        notif.style.color = "white";
+        notif.style.padding = "10px";
+        notif.style.marginBottom = "10px";
+        notif.style.borderRadius = "5px";
+        notif.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+        notif.style.opacity = "1";
+        notif.style.transition = "opacity 0.5s";
+
+        panel.appendChild(notif);
+
+        // Quitar tras X segundos
+        setTimeout(() => {
+            notif.style.opacity = "0";
+            setTimeout(() => panel.removeChild(notif), 500); // esperar la animación
+        }, timeout);
+    }
