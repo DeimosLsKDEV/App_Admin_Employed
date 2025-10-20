@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AppAdminEmployed.Models;
 using AppAdminEmployed.Repository;
 
@@ -20,22 +21,45 @@ namespace AppAdminEmployed.Service
 
         public async Task<EmpleadoModel> ObtenerEmpleadosPorIdentificacion(int IDENTIFICACION)
         {
-            Predicate<EmpleadoModel> predicate = new Predicate<EmpleadoModel>(
-                empleado => empleado.IDENTIFICACION == IDENTIFICACION
-            );
+            Expression<Func<EmpleadoModel, bool>> filtro = 
+                empleado => empleado.IDENTIFICACION == IDENTIFICACION;
 
-            IEnumerable<EmpleadoModel> empleados = await _repositoryEmpleado.FindAsync(
-                empleado => empleado.IDENTIFICACION == IDENTIFICACION
-            );
+            IEnumerable<EmpleadoModel> empleados = await _repositoryEmpleado.FindAsync(filtro);
 
-            return empleados.FirstOrDefault();
+            return empleados.First();
         }
-        
+
+        public async Task<EmpleadoModel> ObtenerEmpleadoPorUUID(Guid UUID)
+        {
+            Expression<Func<EmpleadoModel, bool>> filtro =
+                empleado => empleado.UUID == UUID;
+                
+            IEnumerable<EmpleadoModel> empleados = await _repositoryEmpleado.FindAsync(filtro);
+
+            return empleados.First();
+        }
+
         public async Task<EmpleadoModel> AnnadirEmpleado(EmpleadoModel EMPLEADO_NUEVO)
         {
             EmpleadoModel EMPLEADO_RESULTADO;
+            EMPLEADO_NUEVO.UUID = Guid.NewGuid();
             EMPLEADO_RESULTADO = await _repositoryEmpleado.AddAsync(EMPLEADO_NUEVO);
             return EMPLEADO_RESULTADO;
+        }
+        
+        public async Task<EmpleadoModel> UpdateEmpleado(EmpleadoModel EMPLEADO_ACTUALIZAR)
+        {
+            try
+            {
+                await _repositoryEmpleado.UpdateAsync(EMPLEADO_ACTUALIZAR);
+                return EMPLEADO_ACTUALIZAR;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+            
         }
     }
 }

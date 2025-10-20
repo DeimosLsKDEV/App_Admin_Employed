@@ -7,9 +7,9 @@ namespace AppAdminEmployed.Models
     public class EmpleadoModel
     {
         [Key]
-        public Guid UUID { get; set; } = Guid.NewGuid();
-
-        public required int IDENTIFICACION { get; set; }
+        public Guid UUID { get; set; }
+        [Required]
+        public int? IDENTIFICACION { get; set; } = null;
 
         public string? PRIMER_NOMBRE { get; set; }
         public string? SEGUNDO_NOMBRE { get; set; }

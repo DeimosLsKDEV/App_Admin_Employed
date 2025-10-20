@@ -27,12 +27,12 @@ public class EmpleadoController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Add()
+    public IActionResult Add()
     {
         ViewBag.MethodView = "Add";
         ViewBag.ControllerView = "Empleado";
 
-        EmpleadoModel? empleadoModel = null;
+        EmpleadoModel? empleadoModel = new EmpleadoModel();
         return PartialView(empleadoModel);
     }
 
@@ -41,10 +41,9 @@ public class EmpleadoController : Controller
         int IDENTIFICACION
     )
     {
-        EmpleadoModel? UpdatedEmpleado = null;
         ViewBag.MethodView = "Update";
         ViewBag.ControllerView = "Empleado";
-
+        EmpleadoModel? UpdatedEmpleado;
         try
         {
             UpdatedEmpleado = await _EmpleadoService.ObtenerEmpleadosPorIdentificacion(IDENTIFICACION);
@@ -55,7 +54,7 @@ public class EmpleadoController : Controller
                 {
                     success = false,
                     message = "Empleado no encontrado",
-                    errorCode = "NOT_FOUND"                
+                    errorCode = "NOT_FOUND"
                 });
             }
         }
@@ -83,6 +82,20 @@ public class EmpleadoController : Controller
         }
 
         return View(empleado);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(EmpleadoModel updateEmpleado)
+    {
+        if (ModelState.IsValid)
+        {
+
+            await _EmpleadoService.UpdateEmpleado(updateEmpleado);
+
+            return RedirectToAction("Grid");
+        }
+
+        return RedirectToAction("Add",updateEmpleado);
     }
 
     public IActionResult Privacy()

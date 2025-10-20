@@ -18,9 +18,12 @@
                 {
                     <tr>
                         <td>
-                            <button 
-                                type="button" 
-                                class="btn btn-warning UpdateEmpleado" data-id="@empleado.IDENTIFICACION"><b><i class="fa fa-pen-to-square"></i> Editar</b> </button>
+                            <button type="button" class="btn btn-warning UpdateEmpleado" data-id="@empleado.IDENTIFICACION">
+                                <b><i class="fa fa-pen-to-square"></i></b>
+                            </button>
+                            <button type="button" class="btn btn-danger DeleteEmpleado" data-id="@empleado.IDENTIFICACION">
+                                <b><i class="fa fa-trash"></i></b>
+                            </button>
                         </td>
                         <td>@empleado.UUID</td>
                         <td>@empleado.IDENTIFICACION</td>

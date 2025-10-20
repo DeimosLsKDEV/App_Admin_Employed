@@ -24,10 +24,31 @@ function RedirectContentUrl(container, url){
     });
 }
 
+function CallDeleteObject(
+    valueDelete,
+    valueRepeatDelete,
+    URLDelete
+) {
+    $(".modalTitleEmpleado").html("Actualizar Empleado.")
+    $('#contenedor-delete').empty().html(
+
+    )
+
+}
+
+function ValidatorInputDeleteGlobal(input) {
+    if ($(input).hasClass("is-invalid")) {
+        $("#btn-delete-global-object").prop("disabled", true);
+    } else {
+        $("#btn-delete-global-object").prop("disabled", false);
+    }
+}
+
 function ValidatorsInput(input) {
     let value = input.value;
     let errors = [];
 
+    // Error with info in data
     if (input.dataset.pattern) {
         let regex = new RegExp(input.dataset.pattern);
         let match = input.dataset.pattern.match(/\[([^\]]+)\]/);
@@ -39,6 +60,20 @@ function ValidatorsInput(input) {
 
         if (!regex.test(value)) {
             errors.push("El formato no es válido.");
+        }
+    }
+
+    if (input.dataset.valuecomplete) {
+        if (input.value != input.dataset.valuecomplete) {
+            errors.push(`El contenido no es valido debe ser "${input.dataset.valuecomplete}"`);
+        }
+    }
+
+    // Error with info in attributes in html
+    if (input.hasAttribute("maxlength")) {
+        let max = parseInt(input.getAttribute("maxlength"));
+        if (value.length > max) {
+            errors.push(`No puede tener más de ${max} caracteres.`);
         }
     }
     if (input.hasAttribute("required") && value === "") {
@@ -57,6 +92,7 @@ function ValidatorsInput(input) {
             errors.push(`No puede tener más de ${max} caracteres.`);
         }
     }
+
     let validationMessage = document.querySelector(
         `[data-valmsg-for="${input.name}"]`
     );

@@ -60,13 +60,76 @@
         z-index: 9999;
     ">
     </div>
+    <!-- Modal delete -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalDeleteLabel"> ¿Estas seguro de esto? 🤐</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body" id="contenedor-delete">
+                <input id="input-hidden-delete-url-global" type="hidden" value="UnaUrl"/>
+                <p>Deseas eliminar "Tal vaina"?. Este cambio es inreversible y eliminara toda la información del mismo</p>
+                <p>Paa continua escribe exactamente <b class="text-danger">"Tal otra vaina"</b> para continuar</p>
+                <input 
+                    class="form-control" 
+                    id="input-delete-global"
+                    name="input-delete-global"
+                    type="text"
+                    data-valuecomplete="Tal otra vaina"
+                    oninput = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)",
+                    onblur = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)" 
+                />
+                <label data-valmsg-for="input-delete-global" class="text-danger"></label>
+                <br />
+                <button id="btn-delete-global-object" data-url="@Url.Action("Add","Empleado")" data-contentforurl="" disabled class="btn btn-danger" style="width: 100%"><i class="fa fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         $(document).ready(function () {
             $("#global-loader").hide(); // Se oculta apenas carga la app
+            $('#modalDelete').modal('show');
         });
+
+        function isValid(value) {
+            return value && value.trim() !== "" && value.toLowerCase() !== "none";
+        }
+
+        $("#btn-delete-global-object").click(function(){
+            if (isValid(this.dataset.url) && isValid(this.dataset.contentforurl)) {
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    method: "POST",
+                    dataType: "html",
+                    beforeSend: function () {
+                        $("#global-loader").fadeIn(200);
+                    },
+                    success: function (html) {
+                        $(container).empty().html(html);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la petición AJAX:", error);
+                        $(container).html('<div class="error">❌ Error al cargar</div>');
+                    },
+                    complete: function () {
+                        $("#global-loader").fadeOut(200);
+                    }
+                });
+            } else {
+                console.error(
+                    `Alguno de los siguientes datos no contiene valores válidos: Url: ${this.dataset.url}, Contenedor: ${this.dataset.contentforurl}`
+                );
+            }
+        
+            $('#modalDelete').modal('hide');
+        })
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

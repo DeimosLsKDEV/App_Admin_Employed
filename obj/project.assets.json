@@ -9097,19 +9097,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\batde\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Proyectos\\Universidad\\DevMultimedia\\DOTNET\\App_Admin_Employed\\AppAdminEmployed.csproj",
+      "projectUniqueName": "Z:\\Proyectos\\Univesidad\\DOTNET\\AppAdminEmployed\\AppAdminEmployed.csproj",
       "projectName": "AppAdminEmployed",
-      "projectPath": "D:\\Proyectos\\Universidad\\DevMultimedia\\DOTNET\\App_Admin_Employed\\AppAdminEmployed.csproj",
-      "packagesPath": "C:\\Users\\batde\\.nuget\\packages\\",
-      "outputPath": "D:\\Proyectos\\Universidad\\DevMultimedia\\DOTNET\\App_Admin_Employed\\obj\\",
+      "projectPath": "Z:\\Proyectos\\Univesidad\\DOTNET\\AppAdminEmployed\\AppAdminEmployed.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "Z:\\Proyectos\\Univesidad\\DOTNET\\AppAdminEmployed\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\batde\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -9183,7 +9183,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
