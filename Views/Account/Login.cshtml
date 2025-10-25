@@ -1,0 +1,47 @@
+@model AppAdminEmployed.Models.LoginViewModel
+@{
+    ViewBag.Title = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<h2>Iniciar Sesión</h2>
+
+@using (Html.BeginForm("Login","Account", FormMethod.Post))
+{   
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                @Html.LabelFor(m => m.IDENTIFICACION)
+                @Html.TextBoxFor(m => m.IDENTIFICACION, 
+                    new { 
+                        @class = "form-control", 
+                        minlength = 6, 
+                        maxlength = 12,  
+                        data_pattern = "^[0-9]+$",
+                        oninput = "ValidatorsInput(this)",
+                        onblur = "ValidatorsInput(this)" 
+                    }
+                )
+                @Html.ValidationMessageFor(m => m.IDENTIFICACION, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+            <button type="submit" class="btn btn-success" style="width: 100%;">Ingresar</button>
+        </div>
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="location.href='@Url.Action("Register", "Account")'">
+                Registrarse
+            </button>
+        </div>
+    </div>
+    
+
+    
+    
+}

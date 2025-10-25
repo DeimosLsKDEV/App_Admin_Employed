@@ -4,6 +4,7 @@ using AppAdminEmployed.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppAdminEmployed.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025023436_String_Attr_Empleado")]
+    partial class String_Attr_Empleado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +30,6 @@ namespace AppAdminEmployed.Migrations
                     b.Property<Guid>("UUID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CREATEDAT")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("GUID_SUPERVISOR")
                         .HasColumnType("uniqueidentifier");
@@ -49,9 +49,6 @@ namespace AppAdminEmployed.Migrations
 
                     b.Property<string>("SEGUNDO_NOMBRE")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UPDATEDAT")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("UUID");
 

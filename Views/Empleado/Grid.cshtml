@@ -1,9 +1,17 @@
 @model List<AppAdminEmployed.Models.EmpleadoModel>
 
-<h2>Lista de empleados</h2>
-<div class='row'>
+@{
+    ViewData["Title"] = "Listado de empleados";
+} 
+
+<div class='row UpdateActualUser' style="display: none;">
+    
+</div>
+
+<div class='row EmpleadosList'>
+    <div class='col-12'><h2>Lista de empleados</h2></div>
     <div class='col-12'>
-    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"><b><i class="fa fa-add"></i> Agregar</b></button>
+    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"><b><i class="fa fa-add"></i> Agregar Subordinado</b></button>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -21,7 +29,7 @@
                             <button type="button" class="btn btn-warning UpdateEmpleado" data-id="@empleado.IDENTIFICACION">
                                 <b><i class="fa fa-pen-to-square"></i></b>
                             </button>
-                            <button type="button" class="btn btn-danger DeleteEmpleado" data-id="@empleado.IDENTIFICACION">
+                            <button type="button" class="btn btn-danger DeleteEmpleado" data-id="@empleado.IDENTIFICACION" data-UUID="@empleado.UUID">
                                 <b><i class="fa fa-trash"></i></b>
                             </button>
                         </td>
@@ -41,7 +49,6 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title modalTitleEmpleado" id="modalAddEmpleadoLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" id="contenedor-add-empleado">
@@ -51,19 +58,37 @@
   </div>
 </div>
 
+
+
 @section Scripts {
     <script>
-        $("#AddEmpleado").on("click", function () {
-            $(".modalTitleEmpleado").html("Agregar Empleado.")
-            RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add","Empleado")')
-            $('#modalAddEmpleado').modal('show');
-        });
+        $(function () {
+            var hasUpdated = @((ViewBag.LoggerUserUpdatedAt ?? false).ToString().ToLower());
+            if (hasUpdated) {
+                var empleadoId = "@ViewBag.LoggerUserIdentificacion";
+                showNotification("Bienvenido, Debes de actualizar tu información para poder continuar", "message", 7000)
+                RedirectContentUrl('.UpdateActualUser', '@Url.Action("Update","Empleado")?IDENTIFICACION=' + empleadoId);
+                $(".EmpleadosList").hide()
+                $(".UpdateActualUser").show()
+            }
 
-        $(".UpdateEmpleado").on("click", function () {
-            var empleadoId = $(this).data("id");
-            $(".modalTitleEmpleado").html("Actualizar Empleado.")
-            RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Update","Empleado")?IDENTIFICACION='+empleadoId)
-            $('#modalAddEmpleado').modal('show');
+
+            $("#AddEmpleado").on("click", function () {
+                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add","Empleado")')
+                $('#modalAddEmpleado').modal('show');
+            });
+
+            $(".UpdateEmpleado").on("click", function () {
+                var empleadoId = $(this).data("id");
+                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Update","Empleado")?IDENTIFICACION='+empleadoId)
+                $('#modalAddEmpleado').modal('show');
+            });
+
+            $(".DeleteEmpleado").on("click", function () {
+                var empleadoId = $(this).data("id");
+                var empleadoUUID = $(this).data("uuid");
+                CallDeleteObject('Empleado',empleadoId,'@Url.Action("Delete","Empleado")?uuidEmpleado='+empleadoUUID)
+            });
         });
     </script>
 }

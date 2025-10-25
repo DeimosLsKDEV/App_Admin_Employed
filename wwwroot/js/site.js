@@ -24,15 +24,66 @@ function RedirectContentUrl(container, url){
     });
 }
 
-function CallDeleteObject(
-    valueDelete,
-    valueRepeatDelete,
-    URLDelete
-) {
-    $(".modalTitleEmpleado").html("Actualizar Empleado.")
-    $('#contenedor-delete').empty().html(
+function isValid(value) {
+    return value && value.trim() !== "" && value.toLowerCase() !== "none";
+}
 
+
+function CallDeleteObject(
+    nameObject,
+    valueRepeatDelete,
+    urlDelete,
+    contenedorOpcional
+) {
+    $(".modalTitleEmpleado").html(`Eliminar ${nameObject}.`)
+    $('#contenedor-delete').empty().html(
+        `
+        <p>¿Deseas eliminar "${nameObject}"?. Este cambio es inreversible y eliminara toda la información del mismo</p>
+        <p>Paa continua escribe exactamente <b class="text-danger">"${valueRepeatDelete}"</b> para continuar</p>
+        <input 
+            class="form-control" 
+            id="input-delete-global"
+            name="input-delete-global"
+            type="text"
+            data-valuecomplete="${valueRepeatDelete}"
+            oninput = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)",
+            onblur = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)" 
+        />
+        <label data-valmsg-for="input-delete-global" class="text-danger"></label>
+        <br />
+        <button id="btn-delete-global-object" data-url="${urlDelete}" data-contentforurl="${contenedorOpcional}" disabled class="btn btn-danger" style="width: 100%"><i class="fa fa-trash"></i></button>
+        `
     )
+    $('#modalDelete').modal('show');
+
+     $("#btn-delete-global-object").click(function(){
+            if (isValid(this.dataset.url)) {
+                $.ajax({
+                    url: this.dataset.url,
+                    cache: false,
+                    method: "POST",
+                    dataType: "html",
+                    beforeSend: function () {
+                        $("#global-loader").fadeIn(200);
+                    },
+                    success: function (html) {
+                        showNotification("Se ha eliminado el registro correctamente","success")
+                        $('#modalDelete').modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        showNotification("Error en la petición AJAX:"+error,"error")
+                        console.error("Error en la petición AJAX:", error);
+                    },
+                    complete: function () {
+                        $("#global-loader").fadeOut(200);
+                    }
+                });
+            } else {
+                console.error(
+                    `Alguno de los siguientes datos no contiene valores válidos: Url: ${this.dataset.url}, Contenedor: ${this.dataset.contentforurl}`
+                );
+            }
+        })
 
 }
 
@@ -118,28 +169,42 @@ function ValidatorsInput(input) {
     }
 }
 
-function showNotification(message, timeout = 5000) {
-        const panel = document.getElementById("notification-panel");
+function showNotification(message, type = "message", timeout = 5000) {
+    const panel = document.getElementById("notification-panel");
+    const notif = document.createElement("div");
+    notif.classList.add("notification");
+    notif.classList.add(`notification_${type}`);
+    notif.style.padding = "10px";
+    notif.style.marginBottom = "10px";
+    notif.style.borderRadius = "5px";
+    notif.style.opacity = "1";
+    background = "";
+    color = "#000000";
 
-        const notif = document.createElement("div");
-        notif.className = "notification";
-        notif.innerText = message;
-
-        // Estilos básicos
-        notif.style.background = "#2196F3";
-        notif.style.color = "white";
-        notif.style.padding = "10px";
-        notif.style.marginBottom = "10px";
-        notif.style.borderRadius = "5px";
-        notif.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
-        notif.style.opacity = "1";
-        notif.style.transition = "opacity 0.5s";
-
-        panel.appendChild(notif);
-
-        // Quitar tras X segundos
-        setTimeout(() => {
-            notif.style.opacity = "0";
-            setTimeout(() => panel.removeChild(notif), 500); // esperar la animación
-        }, timeout);
+    switch(type){
+        case "error":{
+            message = `ERROR: ${message}`
+            background = "#E06C6C"
+        }
+        case "message":{
+            background = "#7A80FA"
+        }
+        case "success":{
+            background = "#33DE81"
+        }
     }
+
+    notif.innerText = message;
+    
+    // Estilos básicos
+    notif.style.background = background;
+    notif.style.color = color;
+    notif.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+    notif.style.transition = "opacity 0.5s";
+    panel.appendChild(notif);
+    // Quitar tras X segundos
+    setTimeout(() => {
+        notif.style.opacity = "0";
+        setTimeout(() => panel.removeChild(notif), 500);
+    }, timeout);
+}

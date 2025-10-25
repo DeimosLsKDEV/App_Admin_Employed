@@ -19,7 +19,7 @@ namespace AppAdminEmployed.Service
             return todos_empleados?.ToList() ?? new List<EmpleadoModel>();
         }
 
-        public async Task<EmpleadoModel> ObtenerEmpleadosPorIdentificacion(int IDENTIFICACION)
+        public async Task<EmpleadoModel> ObtenerEmpleadosPorIdentificacion(string IDENTIFICACION)
         {
             Expression<Func<EmpleadoModel, bool>> filtro = 
                 empleado => empleado.IDENTIFICACION == IDENTIFICACION;
@@ -43,14 +43,16 @@ namespace AppAdminEmployed.Service
         {
             EmpleadoModel EMPLEADO_RESULTADO;
             EMPLEADO_NUEVO.UUID = Guid.NewGuid();
+            EMPLEADO_NUEVO.CREATEDAT = DateTime.UtcNow;
             EMPLEADO_RESULTADO = await _repositoryEmpleado.AddAsync(EMPLEADO_NUEVO);
             return EMPLEADO_RESULTADO;
         }
-        
+
         public async Task<EmpleadoModel> UpdateEmpleado(EmpleadoModel EMPLEADO_ACTUALIZAR)
         {
             try
             {
+                EMPLEADO_ACTUALIZAR.UPDATEDAT = DateTime.UtcNow;
                 await _repositoryEmpleado.UpdateAsync(EMPLEADO_ACTUALIZAR);
                 return EMPLEADO_ACTUALIZAR;
             }
@@ -58,6 +60,18 @@ namespace AppAdminEmployed.Service
             {
 
                 return null;
+            }
+
+        }
+        
+        public async Task DeleteEmpleado(EmpleadoModel EMPLEADO_ELIMINAR)
+        {
+            try
+            {
+                await _repositoryEmpleado.DeleteAsync(EMPLEADO_ELIMINAR);
+            }
+            catch (Exception ex)
+            {
             }
             
         }

@@ -2,7 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AppAdminEmployed.Models;
 using AppAdminEmployed.Service;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AppAdminEmployed.Controllers;
 
@@ -20,29 +21,53 @@ public class EmpleadoController : Controller
         _EmpleadoService = EmpleadoService;
     }
 
+    [Authorize]
     public async Task<IActionResult> Grid()
     {
+        EmpleadoModel EmpleadoLogger = null;
+        var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (Guid.TryParse(uuidClaim, out Guid uuid))
+        {
+            EmpleadoLogger = await _EmpleadoService.ObtenerEmpleadoPorUUID(uuid);
+        }
+
+        ViewBag.LoggerUserUpdatedAt = EmpleadoLogger!.UPDATEDAT == null;
+        ViewBag.LoggerUserIdentificacion = EmpleadoLogger.IDENTIFICACION;
         List<EmpleadoModel> Empleado = await _EmpleadoService.ObtenerTodosLosEmpleados();
         return View(Empleado);
     }
 
+    [Authorize]
     [HttpGet]
-    public IActionResult Add()
+    public async Task<IActionResult> Add()
     {
+        EmpleadoModel? EmpleadoLogger = null;
         ViewBag.MethodView = "Add";
         ViewBag.ControllerView = "Empleado";
+        ViewBag.TitleView = "Añadir subordinado.";
+
+        var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (Guid.TryParse(uuidClaim, out Guid uuid))
+        {
+            EmpleadoLogger = await _EmpleadoService.ObtenerEmpleadoPorUUID(uuid);
+        }
 
         EmpleadoModel? empleadoModel = new EmpleadoModel();
+        empleadoModel.GUID_SUPERVISOR = EmpleadoLogger!.GUID_SUPERVISOR;
+        empleadoModel.Supervisor = EmpleadoLogger;
         return PartialView(empleadoModel);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Update(
-        int IDENTIFICACION
+        string IDENTIFICACION
     )
     {
         ViewBag.MethodView = "Update";
         ViewBag.ControllerView = "Empleado";
+        ViewBag.TitleView = "Actualizar empleado.";
+
         EmpleadoModel? UpdatedEmpleado;
         try
         {
@@ -70,6 +95,7 @@ public class EmpleadoController : Controller
         return PartialView("Add", UpdatedEmpleado);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Add(EmpleadoModel empleado)
     {
@@ -84,6 +110,7 @@ public class EmpleadoController : Controller
         return View(empleado);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Update(EmpleadoModel updateEmpleado)
     {
@@ -95,7 +122,28 @@ public class EmpleadoController : Controller
             return RedirectToAction("Grid");
         }
 
-        return RedirectToAction("Add",updateEmpleado);
+        return RedirectToAction("Add", updateEmpleado);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Delete(string uuidEmpleado)
+    {
+        EmpleadoModel? empleadoDelete;
+        Guid uuid = Guid.Parse(uuidEmpleado);
+ 
+        empleadoDelete = await _EmpleadoService.ObtenerEmpleadoPorUUID(uuid);
+        if (empleadoDelete == null)
+        {
+            return NotFound(new
+            {
+                success = false,
+                message = "Empleado no encontrado",
+                errorCode = "NOT_FOUND"
+            });
+        }
+        await _EmpleadoService.DeleteEmpleado(empleadoDelete);
+        return RedirectToAction("Grid");
     }
 
     public IActionResult Privacy()

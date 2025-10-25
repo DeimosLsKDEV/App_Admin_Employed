@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AppAdminEmployed</title>
+    <title>Gestor Subordinados - @ViewData["Title"]</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/AppAdminEmployed.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" /> 
 </head>
@@ -21,12 +22,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Empleado" asp-action="Grid">Empleados</a>
                         </li>
@@ -43,7 +38,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - AppAdminEmployed - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 Universidad Cooperativa de Colombia (UCC)
         </div>
     </footer>
 
@@ -55,7 +50,7 @@
     <div id="notification-panel" style="
         position: fixed;
         top: 20px;
-        left: 20px;
+        right: 20px;
         width: 250px;
         z-index: 9999;
     ">
@@ -69,21 +64,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
           <div class="modal-body" id="contenedor-delete">
-                <input id="input-hidden-delete-url-global" type="hidden" value="UnaUrl"/>
-                <p>Deseas eliminar "Tal vaina"?. Este cambio es inreversible y eliminara toda la información del mismo</p>
-                <p>Paa continua escribe exactamente <b class="text-danger">"Tal otra vaina"</b> para continuar</p>
-                <input 
-                    class="form-control" 
-                    id="input-delete-global"
-                    name="input-delete-global"
-                    type="text"
-                    data-valuecomplete="Tal otra vaina"
-                    oninput = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)",
-                    onblur = "ValidatorsInput(this),ValidatorInputDeleteGlobal(this)" 
-                />
-                <label data-valmsg-for="input-delete-global" class="text-danger"></label>
-                <br />
-                <button id="btn-delete-global-object" data-url="@Url.Action("Add","Empleado")" data-contentforurl="" disabled class="btn btn-danger" style="width: 100%"><i class="fa fa-trash"></i></button>
           </div>
         </div>
       </div>
@@ -93,43 +73,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         $(document).ready(function () {
-            $("#global-loader").hide(); // Se oculta apenas carga la app
-            $('#modalDelete').modal('show');
+            $("#global-loader").hide();
         });
-
-        function isValid(value) {
-            return value && value.trim() !== "" && value.toLowerCase() !== "none";
-        }
-
-        $("#btn-delete-global-object").click(function(){
-            if (isValid(this.dataset.url) && isValid(this.dataset.contentforurl)) {
-                $.ajax({
-                    url: url,
-                    cache: false,
-                    method: "POST",
-                    dataType: "html",
-                    beforeSend: function () {
-                        $("#global-loader").fadeIn(200);
-                    },
-                    success: function (html) {
-                        $(container).empty().html(html);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la petición AJAX:", error);
-                        $(container).html('<div class="error">❌ Error al cargar</div>');
-                    },
-                    complete: function () {
-                        $("#global-loader").fadeOut(200);
-                    }
-                });
-            } else {
-                console.error(
-                    `Alguno de los siguientes datos no contiene valores válidos: Url: ${this.dataset.url}, Contenedor: ${this.dataset.contentforurl}`
-                );
-            }
-        
-            $('#modalDelete').modal('hide');
-        })
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

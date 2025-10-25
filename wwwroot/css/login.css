@@ -1,0 +1,18 @@
+body {
+    background: #B0B0B0;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    width: 500px;
+    margin: 100px auto;
+    padding: 25px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}

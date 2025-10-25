@@ -2,6 +2,8 @@
 
 @using (Html.BeginForm((string)ViewBag.MethodView, (string)ViewBag.ControllerView, FormMethod.Post))
 {
+    <h4>@ViewBag.TitleView</h4>
+    <hr />
     @Html.HiddenFor(m => m.UUID, new {required = false})
     <div class="form-group">
         @Html.LabelFor(m => m.IDENTIFICACION)
@@ -71,6 +73,17 @@
                     onblur = "ValidatorsInput(this)" 
             })
         @Html.ValidationMessageFor(m => m.SEGUNDO_APELLIDO, "", new { @class = "text-danger" })
+    </div>
+    <hr />
+    <h4>SUPERVISOR</h4>
+    <hr />
+    <div class="form-group">
+        @Html.LabelFor(m => m.Supervisor!.IDENTIFICACION) :
+        <b>@Model.Supervisor?.IDENTIFICACION</b>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Supervisor!.NOMBRE_COMPLETO) :
+        <b>@Model.Supervisor?.NOMBRE_COMPLETO</b>
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar</button>

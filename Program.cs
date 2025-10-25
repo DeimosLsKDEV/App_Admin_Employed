@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using AppAdminEmployed.Repository;
 using AppAdminEmployed.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,10 +26,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<EmpleadosService>();
 builder.Services.AddScoped<EmpleadoRepository>();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/Denied";
+    });
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-
 builder.Services.AddValidatorsFromAssemblyContaining<EmpleadoValidator>();
 
 var app = builder.Build();
@@ -51,13 +59,14 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Empleado}/{action=Grid}/{id?}")
+    pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 
