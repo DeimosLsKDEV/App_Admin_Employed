@@ -29,3 +29,38 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Jerarquia de empleados */
+.tree-simple {
+    font-family: Arial, sans-serif;
+}
+
+.tree-simple .nodo {
+    margin-bottom: 12px;
+}
+
+.card-nodo {
+    border: 1px solid #ccc;
+    border-left: 6px solid var(--orange-color);
+    background: #fdfdfd;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    min-width: 220px;
+}
+
+.card-nodo strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.subordinados {
+    border-left: 2px dashed #ddd;
+    margin-left: 15px;
+    padding-left: 15px;
+}
+
+.text-orange {
+  color: var(--orange-color)
+}

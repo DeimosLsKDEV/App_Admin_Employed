@@ -22,21 +22,42 @@ public class EmpleadoController : Controller
     }
 
     [Authorize]
-    public async Task<IActionResult> Grid()
+    public async Task<IActionResult> Grid([FromServices] ArbolBackgroundService background)
     {
-        EmpleadoModel EmpleadoLogger = null;
+        EmpleadoModel? EmpleadoLogger = null;
         var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (Guid.TryParse(uuidClaim, out Guid uuid))
         {
             EmpleadoLogger = await _EmpleadoService.ObtenerEmpleadoPorUUID(uuid);
         }
 
+        if (!background.EstaConstruido(uuid))
+        {
+            return View("Cargando");
+        }
+
+        EmpleadoModel? EmpleadoConSubordinados = background.GetArbol(uuid);
+        List<EmpleadoModel> ListadoEmpleado = background.ArbolALista(EmpleadoConSubordinados);
+
+        ViewBag.ArbolEmpleado = EmpleadoConSubordinados;
+
         ViewBag.LoggerUserUpdatedAt = EmpleadoLogger!.UPDATEDAT == null;
         ViewBag.LoggerUserIdentificacion = EmpleadoLogger.IDENTIFICACION;
-        List<EmpleadoModel> Empleado = await _EmpleadoService.ObtenerTodosLosEmpleados();
-        return View(Empleado);
+        return View(ListadoEmpleado);
     }
 
+    [Authorize]
+    [HttpGet]
+    public IActionResult EstadoJerarquiaSubordinados([FromServices] ArbolBackgroundService background)
+    {
+        var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(uuidClaim, out Guid uuid))
+            return Unauthorized();
+
+        bool listo = background.EstaConstruido(uuid);
+        return Json(new { listo });
+    }
+    
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Add()
@@ -53,7 +74,7 @@ public class EmpleadoController : Controller
         }
 
         EmpleadoModel? empleadoModel = new EmpleadoModel();
-        empleadoModel.GUID_SUPERVISOR = EmpleadoLogger!.GUID_SUPERVISOR;
+        empleadoModel.GUID_SUPERVISOR = EmpleadoLogger!.UUID;
         empleadoModel.Supervisor = EmpleadoLogger;
         return PartialView(empleadoModel);
     }
@@ -97,12 +118,18 @@ public class EmpleadoController : Controller
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Add(EmpleadoModel empleado)
+    public async Task<IActionResult> Add(EmpleadoModel empleado, [FromServices] ArbolBackgroundService background)
     {
         if (ModelState.IsValid)
         {
 
             await _EmpleadoService.AnnadirEmpleado(empleado);
+
+            var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(uuidClaim, out Guid uuid))
+            {
+                await background.ReConstruirArbol(uuid);
+            }
 
             return RedirectToAction("Grid");
         }

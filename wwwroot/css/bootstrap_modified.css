@@ -1,0 +1,24 @@
+.accordion-button {
+    background-color: var(--bs-light);
+    color: var(--bs-body-color);
+    border-left: 6px solid var(--bs-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:hover {
+    background-color: rgba(var(--orange-color), 0.1);
+    color: var(--orange-color);
+    border-left-color: var(--bs-primary);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--bs-primary);
+    color: #fff;
+    border-left-color: var(--bs-dark);
+}
+
+.accordion-body {
+    background-color: var(--bs-white);
+    border-left: 2px dashed var(--bs-gray-400);
+}

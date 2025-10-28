@@ -1,0 +1,19 @@
+@model EmpleadoModel
+
+<div class="nodo">
+    <div class="card-nodo">
+        <i class="fa fa-user text-orange"></i>
+        <strong>@Model.NOMBRE_COMPLETO</strong>
+        <div class="small text-muted">@Model.IDENTIFICACION</div>
+    </div>
+
+    @if (Model.Subordinados != null && Model.Subordinados.Any())
+    {
+        <div class="subordinados ms-4 mt-2">
+            @foreach (var sub in Model.Subordinados)
+            {
+                <partial name="Nodo" model="sub" />
+            }
+        </div>
+    }
+</div>
