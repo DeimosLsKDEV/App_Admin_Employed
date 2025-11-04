@@ -6,6 +6,7 @@ using DotNetEnv;
 using AppAdminEmployed.Repository;
 using AppAdminEmployed.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using AppAdminEmployed.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<EmpleadosService>();
 builder.Services.AddScoped<EmpleadoRepository>();
+
+builder.Services.AddScoped<CSVService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -57,8 +60,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

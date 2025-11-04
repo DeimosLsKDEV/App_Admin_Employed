@@ -156,4 +156,25 @@ public class EmpleadoController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadCsv(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("No se subió ningún archivo.");
+        var empleados = await _EmpleadoService.CargarDesdeCsvAsync(file);
+        return Ok(new
+        {
+            mensaje = $"Se cargaron {empleados.Count} empleados desde CSV y se guardaron en caché.",
+            total = empleados.Count
+        });
+    }
+    [HttpGet]
+    public IActionResult GetCachedEmpleados()
+    {
+        var empleados = _EmpleadoService.ObtenerDesdeCache();
+        if (empleados == null)
+            return NotFound("No hay datos de empleados en caché.");
+        return Json(empleados);
+    }
 }

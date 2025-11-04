@@ -1,16 +1,25 @@
 using System.Linq.Expressions;
 using AppAdminEmployed.Models;
 using AppAdminEmployed.Repository;
+using AppAdminEmployed.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace AppAdminEmployed.Service
 {
     public class EmpleadosService
     {
         private readonly EmpleadoRepository _repositoryEmpleado;
+        private readonly IMemoryCache _cache;
+        private readonly CSVService _csvService;
 
-        public EmpleadosService(EmpleadoRepository repositoryEmpleado)
-        {
+        public EmpleadosService(
+            EmpleadoRepository repositoryEmpleado,
+            IMemoryCache cache,
+            CSVService csvService
+        ){
             _repositoryEmpleado = repositoryEmpleado;
+            _cache = cache;
+            _csvService = csvService;
         }
 
         public async Task<List<EmpleadoModel>> ObtenerTodosLosEmpleados()
@@ -63,7 +72,7 @@ namespace AppAdminEmployed.Service
             }
 
         }
-        
+
         public async Task DeleteEmpleado(EmpleadoModel EMPLEADO_ELIMINAR)
         {
             try
@@ -73,7 +82,52 @@ namespace AppAdminEmployed.Service
             catch (Exception ex)
             {
             }
-            
+
         }
+
+
+        public async Task<List<EmpleadoModel>> CargarDesdeCsvAsync(IFormFile archivo)
+        {
+            var filas = await _csvService.LeerCsvAsync(archivo.OpenReadStream());
+            var empleados = new List<EmpleadoModel>();
+
+            foreach (var fila in filas)
+            {
+                try
+                {
+                    var empleado = new EmpleadoModel
+                    {
+                        UUID = Guid.NewGuid(),
+                        IDENTIFICACION = fila.GetValueOrDefault("IDENTIFICACION") ?? string.Empty,
+                        PRIMER_NOMBRE = fila.GetValueOrDefault("PRIMER_NOMBRE"),
+                        SEGUNDO_NOMBRE = fila.GetValueOrDefault("SEGUNDO_NOMBRE"),
+                        PRIMER_APELLIDO = fila.GetValueOrDefault("PRIMER_APELLIDO"),
+                        SEGUNDO_APELLIDO = fila.GetValueOrDefault("SEGUNDO_APELLIDO"),
+                        GUID_SUPERVISOR = Guid.TryParse(fila.GetValueOrDefault("GUID_SUPERVISOR"), out var guidSup)
+                            ? guidSup
+                            : (Guid?)null,
+                        CREATEDAT = DateTime.UtcNow
+                    };
+
+                    empleados.Add(empleado);
+                }
+                catch
+                {
+                    // Ignorar fila malformada
+                    continue;
+                }
+            }
+
+            _cache.Set("EmpleadosCache", empleados, TimeSpan.FromMinutes(15));
+
+            return empleados;
+        }
+        
+        public List<EmpleadoModel>? ObtenerDesdeCache()
+        {
+            _cache.TryGetValue("empleados_csv", out List<EmpleadoModel>? empleados);
+            return empleados;
+        }
+        
     }
 }
