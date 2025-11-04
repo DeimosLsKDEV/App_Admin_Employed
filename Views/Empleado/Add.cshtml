@@ -2,9 +2,10 @@
 
 @using (Html.BeginForm((string)ViewBag.MethodView, (string)ViewBag.ControllerView, FormMethod.Post))
 {
+    @Html.HiddenFor(m => m.GUID_SUPERVISOR, new {value = Model.GUID_SUPERVISOR})
+    @Html.HiddenFor(m => m.UUID, new {required = false})
     <h4>@ViewBag.TitleView</h4>
     <hr />
-    @Html.HiddenFor(m => m.UUID, new {required = false})
     <div class="form-group">
         @Html.LabelFor(m => m.IDENTIFICACION)
         @Html.TextBoxFor(m => m.IDENTIFICACION, 

@@ -26,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<EmpleadosService>();
 builder.Services.AddScoped<EmpleadoRepository>();
+builder.Services.AddSingleton<ArbolBackgroundService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<ArbolBackgroundService>());
 
 builder.Services.AddScoped<CSVService>();
 
@@ -33,7 +35,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout";
+        options.LogoutPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/Denied";
     });
 
@@ -41,7 +43,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<EmpleadoValidator>();
-
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Generated automatic DB Requeriments into AppDbContext

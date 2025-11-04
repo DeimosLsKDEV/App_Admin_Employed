@@ -1,0 +1,8 @@
+:root {
+  --blue-color: #0056b3;     /* Supervisor principal */
+  --blue-ligth-color: #0d6efd;     /* Subordinados directos */
+  --green-ligth-color: #20c997;     /* Sub-subordinados */
+  --purple-color: #6f42c1;     /* Otros */
+  --red-color: #dc3545; /* Eliminar */
+  --orange-color: #ffc107;   /* Editar */
+}

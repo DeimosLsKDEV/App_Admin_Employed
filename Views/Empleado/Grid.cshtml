@@ -2,60 +2,107 @@
 
 @{
     ViewData["Title"] = "Listado de empleados";
-} 
+    EmpleadoModel? arbol = ViewBag.ArbolEmpleado as EmpleadoModel;
+
+}
 
 <div class='row UpdateActualUser' style="display: none;">
-    
+
 </div>
 
-<div class='row EmpleadosList'>
-    <div class='col-12'><h2>Lista de empleados</h2></div>
-    <div class='col-12'>
-    <button id="AddEmpleado" class="btn btn-success" style="width: 100%"><b><i class="fa fa-add"></i> Agregar Subordinado</b></button>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th> <i class="fa fa-location-crosshairs"></i> Acciones</th>
-                    <th>ID</th>
-                    <th>Identificación</th>
-                    <th>Nombre</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var empleado in Model)
-                {
-                    <tr>
-                        <td>
-                            <button type="button" class="btn btn-warning UpdateEmpleado" data-id="@empleado.IDENTIFICACION">
-                                <b><i class="fa fa-pen-to-square"></i></b>
-                            </button>
-                            <button type="button" class="btn btn-danger DeleteEmpleado" data-id="@empleado.IDENTIFICACION" data-UUID="@empleado.UUID">
-                                <b><i class="fa fa-trash"></i></b>
-                            </button>
-                        </td>
-                        <td>@empleado.UUID</td>
-                        <td>@empleado.IDENTIFICACION</td>
-                        <td>@empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE
-                            @empleado.SEGUNDO_NOMBRE
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="accordion" id="empleadosAccordion">
+
+    <!-- Sección 1: Jerarquía -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingJerarquia">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJerarquia"
+                aria-expanded="true" aria-controls="collapseJerarquia">
+                <i class="fa fa-sitemap me-2"></i> Jerarquía de empleados
+            </button>
+        </h2>
+        <div id="collapseJerarquia" class="accordion-collapse collapse show" aria-labelledby="headingJerarquia"
+            data-bs-parent="#empleadosAccordion">
+            <div class="accordion-body">
+                <div class="tree-simple">
+                    <partial name="Nodo" model="arbol" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 2: Lista de empleados -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingLista">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseLista" aria-expanded="false" aria-controls="collapseLista">
+                <i class="fa fa-users me-2"></i> Lista de empleados
+            </button>
+        </h2>
+        <div id="collapseLista" class="accordion-collapse collapse" aria-labelledby="headingLista"
+            data-bs-parent="#empleadosAccordion">
+            <div class="accordion-body">
+
+                <div class="mb-3">
+                    <button id="AddEmpleado" class="btn btn-success w-100">
+                        <b><i class="fa fa-add"></i> Agregar Subordinado</b>
+                    </button>
+                </div>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa fa-location-crosshairs"></i> Acciones</th>
+                            <th>ID</th>
+                            <th>Identificación</th>
+                            <th>Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (EmpleadoModel empleado in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (empleado.IS_EDITABLE)
+                                    {
+                                        <button type="button" class="btn btn-warning UpdateEmpleado"
+                                            data-id="@empleado.IDENTIFICACION">
+                                            <b><i class="fa fa-pen-to-square"></i></b>
+                                        </button>
+                                    }
+                                    @if (empleado.IS_DELETABLE)
+                                    {
+                                        <button type="button" class="btn btn-danger DeleteEmpleado"
+                                            data-id="@empleado.IDENTIFICACION" data-UUID="@empleado.UUID">
+                                            <b><i class="fa fa-trash"></i></b>
+                                        </button>
+                                    }
+                                </td>
+                                <td>@empleado.UUID</td>
+                                <td>@empleado.IDENTIFICACION</td>
+                                <td>
+                                    @empleado.PRIMER_APELLIDO @empleado.SEGUNDO_APELLIDO @empleado.PRIMER_NOMBRE
+                                    @empleado.SEGUNDO_NOMBRE
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="modal fade" id="modalAddEmpleado" tabindex="-1" aria-labelledby="modalAddEmpleadoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body" id="contenedor-add-empleado">
-        
-      </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="contenedor-add-empleado">
+
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
@@ -67,27 +114,27 @@
             if (hasUpdated) {
                 var empleadoId = "@ViewBag.LoggerUserIdentificacion";
                 showNotification("Bienvenido, Debes de actualizar tu información para poder continuar", "message", 7000)
-                RedirectContentUrl('.UpdateActualUser', '@Url.Action("Update","Empleado")?IDENTIFICACION=' + empleadoId);
+                RedirectContentUrl('.UpdateActualUser', '@Url.Action("Update", "Empleado")?IDENTIFICACION=' + empleadoId);
                 $(".EmpleadosList").hide()
                 $(".UpdateActualUser").show()
             }
 
 
             $("#AddEmpleado").on("click", function () {
-                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add","Empleado")')
+                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Add", "Empleado")')
                 $('#modalAddEmpleado').modal('show');
             });
 
             $(".UpdateEmpleado").on("click", function () {
                 var empleadoId = $(this).data("id");
-                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Update","Empleado")?IDENTIFICACION='+empleadoId)
+                RedirectContentUrl('#contenedor-add-empleado', '@Url.Action("Update", "Empleado")?IDENTIFICACION=' + empleadoId)
                 $('#modalAddEmpleado').modal('show');
             });
 
             $(".DeleteEmpleado").on("click", function () {
                 var empleadoId = $(this).data("id");
                 var empleadoUUID = $(this).data("uuid");
-                CallDeleteObject('Empleado',empleadoId,'@Url.Action("Delete","Empleado")?uuidEmpleado='+empleadoUUID)
+                CallDeleteObject('Empleado', empleadoId, '@Url.Action("Delete", "Empleado")?uuidEmpleado=' + empleadoUUID)
             });
         });
     </script>

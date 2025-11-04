@@ -23,14 +23,14 @@ namespace AppAdminEmployed.Service
         }
 
         public async Task<List<EmpleadoModel>> ObtenerTodosLosEmpleados()
-        { 
+        {
             IEnumerable<EmpleadoModel> todos_empleados = await _repositoryEmpleado.GetAllAsync();
             return todos_empleados?.ToList() ?? new List<EmpleadoModel>();
         }
 
         public async Task<EmpleadoModel> ObtenerEmpleadosPorIdentificacion(string IDENTIFICACION)
         {
-            Expression<Func<EmpleadoModel, bool>> filtro = 
+            Expression<Func<EmpleadoModel, bool>> filtro =
                 empleado => empleado.IDENTIFICACION == IDENTIFICACION;
 
             IEnumerable<EmpleadoModel> empleados = await _repositoryEmpleado.FindAsync(filtro);
@@ -42,7 +42,7 @@ namespace AppAdminEmployed.Service
         {
             Expression<Func<EmpleadoModel, bool>> filtro =
                 empleado => empleado.UUID == UUID;
-                
+
             IEnumerable<EmpleadoModel> empleados = await _repositoryEmpleado.FindAsync(filtro);
 
             return empleados.First();
@@ -83,6 +83,65 @@ namespace AppAdminEmployed.Service
             {
             }
 
+        }
+
+        public async Task<EmpleadoModel?> ConstruirJerarquiaSubordinados(Guid supervisorUuid)
+        {
+            List<EmpleadoModel> ListaEmpleados = (await _repositoryEmpleado.GetAllAsync()).ToList();
+            var lookup = ListaEmpleados.ToDictionary(e => e.UUID);
+
+            foreach (EmpleadoModel emp in ListaEmpleados)
+            {
+                emp.Subordinados = new List<EmpleadoModel>();
+            }
+
+            foreach (var emp in ListaEmpleados)
+            {
+                if (emp.GUID_SUPERVISOR != null && lookup.ContainsKey(emp.GUID_SUPERVISOR.Value))
+                {
+                    EmpleadoModel? jefe = lookup[emp.GUID_SUPERVISOR.Value];
+                    jefe.Subordinados!.Add(emp);
+                    emp.Supervisor = jefe;
+                }
+            }
+
+            if (lookup.ContainsKey(supervisorUuid))
+            {
+                var root = lookup[supervisorUuid];
+                if (root.Subordinados != null)
+                {
+                    foreach (var sub in root.Subordinados)
+                    {
+                        MarcarEditable(sub, supervisorUuid, true);
+                    }
+                }
+                return root;
+            }
+
+            return null;
+        }
+
+
+        private void MarcarEditable(EmpleadoModel nodo, Guid supervisorUuid, bool esDirecto = true)
+        {
+            if (esDirecto)
+            {
+                nodo.IS_EDITABLE = true;
+                nodo.IS_DELETABLE = true;
+            }
+            else
+            {
+                nodo.IS_EDITABLE = false;
+                nodo.IS_DELETABLE = true;
+            }
+
+            if (nodo.Subordinados != null)
+            {
+                foreach (var sub in nodo.Subordinados)
+                {
+                    MarcarEditable(sub, supervisorUuid, false);
+                }
+            }
         }
 
 

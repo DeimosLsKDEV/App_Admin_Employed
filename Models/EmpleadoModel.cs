@@ -27,13 +27,18 @@ namespace AppAdminEmployed.Models
 
         [NotMapped]
         [Display(Name = "NOMBRE COMPLETO")]
-        public string NOMBRE_COMPLETO 
+        public string NOMBRE_COMPLETO
         {
-            get 
+            get
             {
                 return $"{PRIMER_NOMBRE} {SEGUNDO_NOMBRE} {PRIMER_APELLIDO} {SEGUNDO_APELLIDO}".Replace("  ", " ").Trim();
             }
         }
+
+        [NotMapped]
+        public bool IS_EDITABLE { get; set; } = false;
+        [NotMapped]
+        public bool IS_DELETABLE { get; set; } = false;
         public DateTime CREATEDAT { get; set; } = DateTime.UtcNow;
         public DateTime? UPDATEDAT { get; set; }
     }

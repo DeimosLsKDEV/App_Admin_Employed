@@ -40,8 +40,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cQWRkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[Z:/Proyectos/Univesidad/DOTNET/AppAdminEmployed/Views/Empleado/Cargando.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cQ2FyZ2FuZG8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [Z:/Proyectos/Univesidad/DOTNET/AppAdminEmployed/Views/Empleado/Grid.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cR3JpZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[Z:/Proyectos/Univesidad/DOTNET/AppAdminEmployed/Views/Empleado/Nodo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cTm9kby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [Z:/Proyectos/Univesidad/DOTNET/AppAdminEmployed/Views/Empleado/UploadCsv.cshtml]

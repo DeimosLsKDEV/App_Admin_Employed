@@ -1,0 +1,32 @@
+@{
+    Layout = "_Layout";
+}
+
+<div style="text-align:center; margin-top:50px;">
+    <h2>Construyendo jerarquía de empleados...</h2>
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Cargando...</span>
+    </div>
+</div>
+
+<script>
+    async function verificarArbol() {
+        try {
+            const response = await fetch('@Url.Action("EstadoJerarquiaSubordinados", "Empleado")');
+            const data = await response.json();
+
+            if (data.listo) {
+                // ✅ Cuando esté listo, recargar página
+                window.location.href = '@Url.Action("Grid", "Empleado")';
+            } else {
+                // 🔄 Si no está listo, vuelve a intentar en 2 segundos
+                setTimeout(verificarArbol, 2000);
+            }
+        } catch (e) {
+            console.error("Error verificando árbol", e);
+            setTimeout(verificarArbol, 5000); // reintento más largo si hay error
+        }
+    }
+
+    verificarArbol();
+</script>

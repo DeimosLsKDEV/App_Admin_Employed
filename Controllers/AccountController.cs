@@ -27,7 +27,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model, [FromServices] ArbolBackgroundService background)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -47,9 +47,13 @@ public class AccountController : Controller
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
+
+            await background.EncolarConstruccion(EmpleadoEncontrado.UUID);
 
             return RedirectToAction("Grid", "Empleado");
         }
@@ -58,9 +62,16 @@ public class AccountController : Controller
         return View(model);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Logout()
+    [HttpGet]
+    public async Task<IActionResult> Logout([FromServices] ArbolBackgroundService background)
     {
+        var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (Guid.TryParse(uuidClaim, out Guid uuid))
+        {
+            background.EliminarArbol(uuid);
+        }
+
+
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login", "Account");
     }
