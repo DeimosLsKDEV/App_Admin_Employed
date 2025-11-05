@@ -3,7 +3,7 @@
 }
 
 <div style="text-align:center; margin-top:50px;">
-    <h2>Construyendo jerarquía de empleados...</h2>
+    <h2>Cargando...</h2>
     <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Cargando...</span>
     </div>
@@ -17,7 +17,7 @@
 
             if (data.listo) {
                 // ✅ Cuando esté listo, recargar página
-                window.location.href = '@Url.Action("Grid", "Empleado")';
+                window.location.href = '@ViewBag.ActionResult';
             } else {
                 // 🔄 Si no está listo, vuelve a intentar en 2 segundos
                 setTimeout(verificarArbol, 2000);

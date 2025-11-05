@@ -40,12 +40,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cQWRkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Proyectos/Universidad/DevMultimedia/DOTNET/App_Admin_Employed/Views/Empleado/Buscador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cQnVzY2Fkb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Proyectos/Universidad/DevMultimedia/DOTNET/App_Admin_Employed/Views/Empleado/Cargando.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cQ2FyZ2FuZG8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Proyectos/Universidad/DevMultimedia/DOTNET/App_Admin_Employed/Views/Empleado/Grid.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cR3JpZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Proyectos/Universidad/DevMultimedia/DOTNET/App_Admin_Employed/Views/Empleado/Jerarquia.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbGVhZG9cSmVyYXJxdWlhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Proyectos/Universidad/DevMultimedia/DOTNET/App_Admin_Employed/Views/Empleado/Nodo.cshtml]

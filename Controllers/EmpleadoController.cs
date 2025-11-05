@@ -1,8 +1,10 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using AppAdminEmployed.Models;
 using AppAdminEmployed.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using System.Security.Claims;
 
 namespace AppAdminEmployed.Controllers;
@@ -33,6 +35,7 @@ public class EmpleadoController : Controller
 
         if (!background.EstaConstruido(uuid))
         {
+            ViewBag.ActionResult = Url.Action("Grid", "Empleado");
             return View("Cargando");
         }
 
@@ -57,7 +60,7 @@ public class EmpleadoController : Controller
         bool listo = background.EstaConstruido(uuid);
         return Json(new { listo });
     }
-    
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Add()
@@ -158,7 +161,7 @@ public class EmpleadoController : Controller
     {
         EmpleadoModel? empleadoDelete;
         Guid uuid = Guid.Parse(uuidEmpleado);
- 
+
         empleadoDelete = await _EmpleadoService.ObtenerEmpleadoPorUUID(uuid);
         if (empleadoDelete == null)
         {
@@ -173,14 +176,133 @@ public class EmpleadoController : Controller
         return RedirectToAction("Grid");
     }
 
-    public IActionResult Privacy()
+    [HttpGet]
+    public async Task<IActionResult> Jerarquia(Guid? uuidBuscado, [FromServices] ArbolBackgroundService background)
     {
-        return View();
+        EmpleadoModel? empleadoBuscado = null;
+
+        var uuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (uuidBuscado == null && Guid.TryParse(uuidClaim, out Guid uuid))
+            uuidBuscado = uuid;
+
+        Guid UUIDUsuarioBuscado = uuidBuscado ?? Guid.Empty;
+
+        if (!background.EstaConstruido(UUIDUsuarioBuscado))
+        {
+            var empleadoTemp = await _EmpleadoService.ObtenerEmpleadoPorUUID(UUIDUsuarioBuscado);
+            ViewBag.ActionResult = Url.Action("Jerarquia", "Empleado", new { uuidBuscado });
+            await background.EncolarConstruccion(empleadoTemp!.UUID);
+            return View("Cargando");
+        }
+
+        EmpleadoModel? arbol = background.GetArbol(UUIDUsuarioBuscado);
+        List<EmpleadoModel> listado = background.ArbolALista(arbol);
+        empleadoBuscado = listado.FirstOrDefault(e => e.UUID == UUIDUsuarioBuscado);
+        if (empleadoBuscado == null)
+            return NotFound("Empleado no encontrado en el árbol.");
+        empleadoBuscado.Subordinados = listado
+            .Where(e => e.GUID_SUPERVISOR == empleadoBuscado.UUID)
+            .ToList();
+
+        empleadoBuscado.SUPERVISOR_UUID_VISTA = empleadoBuscado.GUID_SUPERVISOR;
+        empleadoBuscado.Breadcrumb = ConstruirBreadcrumb(listado, empleadoBuscado);
+
+        return View(empleadoBuscado);
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    private List<EmpleadoModel> ConstruirBreadcrumb(List<EmpleadoModel> lista, EmpleadoModel actual)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var camino = new List<EmpleadoModel>();
+        var nodo = actual;
+
+        while (nodo != null)
+        {
+            camino.Add(new EmpleadoModel
+            {
+                UUID = nodo.UUID,
+                PRIMER_NOMBRE = nodo.PRIMER_NOMBRE,
+                SEGUNDO_NOMBRE = nodo.SEGUNDO_NOMBRE,
+                PRIMER_APELLIDO = nodo.PRIMER_APELLIDO,
+                SEGUNDO_APELLIDO = nodo.SEGUNDO_APELLIDO
+            });
+
+            nodo = lista.FirstOrDefault(e => e.UUID == nodo.GUID_SUPERVISOR);
+        }
+
+        camino.Reverse();
+        return camino;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Buscador(Guid? uuidBuscado, [FromServices] ArbolBackgroundService background)
+    {
+        return PartialView();
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> Save(EmpleadoModel model)
+    {
+        try
+        {
+            if (model.FotoEmpleado == null || model.FotoEmpleado.Length == 0)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No se ha subido ninguna imagen."
+                });
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                await model.FotoEmpleado.CopyToAsync(ms);
+                ms.Position = 0;
+
+                using (var image = await Image.LoadAsync(ms))
+                {
+                    // Redimensionar si es muy grande
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Mode = ResizeMode.Max,
+                        Size = new Size(600, 600)
+                    }));
+
+                    using (var outStream = new MemoryStream())
+                    {
+                        // Guardar con compresión JPEG (calidad 50)
+                        var encoder = new JpegEncoder { Quality = 50 };
+                        await image.SaveAsJpegAsync(outStream, encoder);
+
+                        HttpContext.Session.Set("ImagenEmpleado", outStream.ToArray());
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                success = true,
+                message = "Imagen cargada y almacenada en sesión correctamente."
+            });
+        }
+        catch (Exception ex)
+        {
+            return Json(new
+            {
+                success = false,
+                message = "Ocurrió un error al procesar la imagen.",
+                error = ex.Message
+            });
+        }
+    }
+
+    [HttpGet]
+    public IActionResult Imagen()
+    {
+        var imagenBytes = HttpContext.Session.Get("ImagenEmpleado");
+        if (imagenBytes != null)
+            return File(imagenBytes, "image/jpeg");
+    
+        return NotFound();
     }
 }

@@ -41,5 +41,14 @@ namespace AppAdminEmployed.Models
         public bool IS_DELETABLE { get; set; } = false;
         public DateTime CREATEDAT { get; set; } = DateTime.UtcNow;
         public DateTime? UPDATEDAT { get; set; }
+        [NotMapped]
+        public Guid? SUPERVISOR_UUID_VISTA { get; set; }
+
+        [NotMapped]
+        public List<EmpleadoModel>? Breadcrumb { get; set; } = new();
+
+        [NotMapped]
+        public IFormFile FotoEmpleado { get; set; }
+        public byte[]? ImagenEmpleado { get; set; }
     }
 }

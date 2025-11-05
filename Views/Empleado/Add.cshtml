@@ -2,6 +2,13 @@
 
 @using (Html.BeginForm((string)ViewBag.MethodView, (string)ViewBag.ControllerView, FormMethod.Post))
 {
+    /*
+    <div class="form-group">
+        <label for="FotoEmpleado">Foto del Empleado</label>
+        <input type="file" id="FotoEmpleado" name="FotoEmpleado" accept="image/*" class="form-control" />
+    </div>
+    <hr />
+    */
     @Html.HiddenFor(m => m.GUID_SUPERVISOR, new {value = Model.GUID_SUPERVISOR})
     @Html.HiddenFor(m => m.UUID, new {required = false})
     <h4>@ViewBag.TitleView</h4>
@@ -89,3 +96,48 @@
 
     <button type="submit" class="btn btn-primary">Guardar</button>
 }
+
+
+<script>
+$(document).ready(function () {
+
+    $('#FotoEmpleado').on('change', function () {
+        const file = this.files[0];
+        const previewContainer = $('#previewContainer');
+
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("FotoEmpleado", file);
+
+        previewContainer.html('<div class="text-info">Subiendo imagen...</div>');
+
+        $.ajax({
+            url: '/Empleado/Save',
+            type: 'POST',
+            data: formData,
+            contentType: false, // importante
+            processData: false, // importante
+            success: function (data) {
+                if (data.success) {
+                    previewContainer.html(`
+                        <div class="alert alert-success">${data.message}</div>
+                        <img src="/Empleado/Imagen?${Date.now()}" 
+                             alt="Foto del empleado" 
+                             width="150" height="150" 
+                             class="mt-2 rounded shadow-sm" />
+                    `);
+                } else {
+                    previewContainer.html(`<div class="alert alert-danger">${data.message}</div>`);
+                    if (data.error) console.error('Error:', data.error);
+                }
+            },
+            error: function (xhr, status, error) {
+                previewContainer.html(`<div class="alert alert-danger">Error al subir la imagen.</div>`);
+                console.error('Error AJAX:', error);
+            }
+        });
+    });
+
+});
+</script>
