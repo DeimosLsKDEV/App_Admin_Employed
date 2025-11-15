@@ -93,9 +93,15 @@ public class EmpleadoController : Controller
         ViewBag.TitleView = "Actualizar empleado.";
 
         EmpleadoModel? UpdatedEmpleado;
+        EmpleadoModel? JefeEmpleado;
         try
         {
             UpdatedEmpleado = await _EmpleadoService.ObtenerEmpleadosPorIdentificacion(IDENTIFICACION);
+            if (UpdatedEmpleado.GUID_SUPERVISOR is Guid guid)
+            {
+                JefeEmpleado = await _EmpleadoService.ObtenerEmpleadoPorUUID(UpdatedEmpleado.GUID_SUPERVISOR.Value);
+                UpdatedEmpleado.Supervisor = JefeEmpleado;
+            }
 
             if (UpdatedEmpleado == null)
             {
